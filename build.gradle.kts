@@ -31,10 +31,13 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
-    implementation("mysql:mysql-connector-java:$mysql_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.apache.commons:commons-csv:1.5")
+
+    implementation("mysql:mysql-connector-java:$mysql_version")
+
 
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
