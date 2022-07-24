@@ -20,14 +20,14 @@ object ConceptWithRelation : Table() {
   override val primaryKey = PrimaryKey(id) // name is optional here
 }
 
-data class ConceptWithRelationCsv (
+data class ConceptWithRelationCsv(
   val id: Int?,
   val parentId: Int,
   val childId: Int,
   val description: String?
 )
 
-data class ConceptsCsv (
+data class ConceptsCsv(
   val id: Int,
   val name: String,
   val link: String?,
