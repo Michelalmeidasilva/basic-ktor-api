@@ -1,16 +1,16 @@
-id,name,concept_id,link
-0,Pick a language,null,null
-1,The Fundamentals,null,null
-2,Java,0,null
-3,Kotlin,0,null
-4,Install Android Studio,1,null
-5,Learn the Basics of Kotlin,1,null
-6,Basic of OOP,1,null
-7,DataStructures and Algorithms,1,null
-8,What is and how to use Gradle,1,null
-9,Version Control Systems,null,null
-10,Repo Hosting Services,null,null
-11,Github,10,null
-12,GitLab,10,null
-13,BitBucket,10,null
-14,Learn to use Git,9,null
+id,name,link
+0,Pick a language,null
+1,The Fundamentals,null
+9,Version Control Systems,null
+10,Repo Hosting Services,null
+2,Java,null
+3,Kotlin,null
+4,Install Android Studio,null
+5,Learn the Basics of Kotlin,null
+6,Basic of OOP,null
+7,DataStructures and Algorithms,null
+8,What is and how to use Gradle,null
+11,Github,null
+12,GitLab,null
+13,BitBucket,null
+14,Learn to use Git,null

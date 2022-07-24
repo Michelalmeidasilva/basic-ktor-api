@@ -1,8 +1,6 @@
 package com.roadmap
 
-import com.roadmap.models.Concepts
-import com.roadmap.models.ConceptsCsv
-import com.roadmap.models.Users
+import com.roadmap.models.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import com.roadmap.plugins.*
@@ -10,88 +8,99 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.io.BufferedReader
 import java.io.File
-import java.io.Reader
 
 
-fun main(args: Array<String>) {
+fun main() {
   println("Init server")
 
   embeddedServer(Netty, port = 8080, host = "0.0.0.0", watchPaths = listOf("classes")) {
     initDB()
-    readCsv()
     configureRouting()
     configureSerialization()
   }.start(wait = true)
 
 }
 
-fun readCsv(){
+fun importCsv(): MutableList<ConceptsCsv>{
   val file = File("/Users/user/michel/Personal/roadmap/src/main/resources/roadmap.csv")
 
-  val bufferedReader =  file.bufferedReader();
+  val bufferedReader =  file.bufferedReader()
 
   val csvParser = CSVParser(bufferedReader, CSVFormat.DEFAULT
     .withFirstRecordAsHeader()
     .withIgnoreHeaderCase()
-    .withTrim());
+    .withTrim())
+
+  val conceptList: MutableList<ConceptsCsv> = mutableListOf()
 
   for (csvRecord in csvParser) {
-    val id = csvRecord.get("id");
-    val name = csvRecord.get("name");
-    val conceptId = csvRecord.get("concept_id");
-    var link = csvRecord.get("link");
+    val id =  Integer.parseInt(csvRecord.get("id"))
+    val name = csvRecord.get("name")
+    val linkCsv: String? = csvRecord.get("link")
 
-    println("$id, $name, $conceptId, $link");
+
+    val linkParsed: String? = if(linkCsv != "null") linkCsv else  null
+
+    conceptList.add(ConceptsCsv(id, name, linkParsed))
   }
-}
-fun getRandomString(length: Int) : String {
-  val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
-  return List(length) { charset.random() }
-    .joinToString("")
+  return conceptList
 }
 
+fun importCsvRelations(): MutableList<ConceptWithRelationCsv>{
+  val file = File("/Users/user/michel/Personal/roadmap/src/main/resources/concept_with_relation.csv")
+
+  val bufferedReader =  file.bufferedReader()
+
+  val csvParser = CSVParser(bufferedReader, CSVFormat.DEFAULT
+    .withFirstRecordAsHeader()
+    .withIgnoreHeaderCase()
+    .withTrim())
+
+  val conceptList: MutableList<ConceptWithRelationCsv> = mutableListOf()
+
+  for (csvRecord in csvParser) {
+    val description = csvRecord.get("description")
+    val parentId: Int = Integer.parseInt(csvRecord.get("parent_id"))
+    val childId: Int = Integer.parseInt(csvRecord.get("child_id"))
+
+    conceptList.add(ConceptWithRelationCsv(id = null, parentId, childId, description ))
+  }
+
+  return conceptList
+}
 fun initDB(){
   Database.connect("jdbc:mysql://localhost:3306/roadmap", driver = "com.mysql.cj.jdbc.Driver",
-    user = "root", password = "roadmap");
+    user = "root", password = "roadmap")
+
+  val conceptsCsv = importCsv()
+  val conceptsRelationsCsv = importCsvRelations()
 
   transaction {
-    SchemaUtils.create(Users, Concepts)
+    SchemaUtils.create(Users, Concepts, ConceptWithRelation)
   }
 
   transaction {
-
-//    val theFundamentals = Concepts.insert {
-//      it[name] = "The fundamentals"
-//      it[conceptId] = null
-//    } get Concepts.id
-//
-//    val pickALanguage = Concepts.insert {
-//      it[name] = "Pick a Language"
-//      it[conceptId] = null
-//    } get Concepts.id
-//
-//    Concepts.insert {
-//      it[name] = "Kotlin"
-//      it[conceptId] = pickALanguage
-//    }
-//
-//    Concepts.insert {
-//      it[name] = "Java"
-//      it[conceptId] = pickALanguage
-//    }
-//
-//    Concepts.insert {
-//      it[name] = "Install Android Studio"
-//      it[conceptId] = theFundamentals
-//    }
-//
-
-
-
+    conceptsCsv.forEach {  value ->
+       Concepts.insert { concept ->
+        concept[name] = value.name
+        concept[link] = value.link
+        concept[id] = value.id
+      }
+    }
   }
+
+  transaction {
+    conceptsRelationsCsv.forEach {  value ->
+      ConceptWithRelation.insert { concept ->
+        concept[description] = value.description
+        concept[parentId] = value.parentId
+        concept[childId] = value.childId
+      }
+    }
+  }
+
 }
 
 
