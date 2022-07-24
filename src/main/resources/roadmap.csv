@@ -14,3 +14,41 @@ id,name,link
 12,GitLab,null
 13,BitBucket,null
 14,Learn to use Git,null
+
+15,Build an application,null
+16,Content Providers,null
+17,Handling app configurations,null
+18,Using Intents,null
+19,Understand context,null
+21,3rd party libraries,null
+22,Using Activities and Activity Lifecycles, null
+23,Building Flexible interfaces using fragments, null
+24,Debugging using Android Studio Debugger,null
+
+25,Components and their usage,null
+26,Room,null
+27,Live Data,null
+28,Data binding,null
+29,Work manager,null
+30,Navigation,null
+
+31,Writing robusts apps,null
+32,Learn Multithreading,null
+33,How to write threaded code,null
+34,Memory concerns,null
+35,How android uses thread internally,null
+36,Security,null
+
+37,Testing,null
+38,Junit,null
+39,Espresso,null
+
+40,Depedency Managment,null
+41,Dagger,null
+42,Koin,null
+
+43,Concurreny,null
+44,RxJava,null
+45,Coroutines,null
+
+46,Keep learning, null
